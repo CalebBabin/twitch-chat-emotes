@@ -101,7 +101,7 @@ class Chat {
 		return false;
 	}
 	
-	drawEmote = (url) => {
+	drawEmote (url) {
 		if (!this.emoteMaterials[url]) {
 			const gif = new GIF(url);
 			this.emoteMaterials[url] = gif;
