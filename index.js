@@ -97,7 +97,7 @@ class Chat {
 
 	checkIfBTTVEmote (string) {
 		if (this.bttvEmotes[string] && !this.emotes[string]) {
-			return drawEmote(this.bttvEmotes[string]);
+			return this.drawEmote(this.bttvEmotes[string]);
 		}
 		return false;
 	}
