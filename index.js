@@ -4,11 +4,12 @@ const GIF = require('./gifLoader.js');
 class Chat {
 	constructor(input_configuration) {
 		const default_conrfiguration = {
-			channels: ['moonmoon'],
 			duplicateEmoteLimit: 1,
 		}
 
 		this.config = Object.assign(default_conrfiguration, input_configuration);
+
+		if (!this.config.channels) this.config.channels = ['moonmoon'];
 
 		this.emotes = {};
 		this.bttvEmotes = {};
@@ -29,8 +30,7 @@ class Chat {
 			fetch(`https://gif-emotes.opl.io/channel/username/${channel}.js`)
 			.then(json => json.json())
 			.then(data => {
-				console.log(data);
-				if (!data.error) {
+				if (!data.error && data !== 404) {
 					for (let index = 0; index < data.length; index++) {
 						const emote = data[index];
 						this.bttvEmotes[emote.code] = emote.id;
