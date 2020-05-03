@@ -27,6 +27,7 @@ class Chat {
 
 		for (let index = 0; index < this.config.channels.length; index++) {
 			const channel = this.config.channels[index];
+			console.log(channel, this.config.channels, this.config, `https://gif-emotes.opl.io/channel/username/${channel}.js`);
 			fetch(`https://gif-emotes.opl.io/channel/username/${channel}.js`)
 			.then(json => json.json())
 			.then(data => {
