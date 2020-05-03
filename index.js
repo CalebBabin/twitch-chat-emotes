@@ -72,7 +72,7 @@ class Chat {
 						}
 					}
 				}
-				const bttvOutput = thischeckIfBTTVEmote(string);
+				const bttvOutput = this.checkIfBTTVEmote(string);
 
 				if (bttvOutput !== false) {
 					output.push({
