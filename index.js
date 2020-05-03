@@ -13,6 +13,7 @@ class Chat {
 		this.emotes = {};
 		this.bttvEmotes = {};
 		this.emoteMaterials = {};
+		this.dispatch = ()=>{};
 
 		this.client = new tmi.Client({
 			options: { debug: false },
@@ -39,7 +40,7 @@ class Chat {
 		}
 
 
-		this.client.addListener('message', handleChat.bind(this));
+		this.client.addListener('message', this.handleChat.bind(this));
 		this.client.connect();
 	}
 
