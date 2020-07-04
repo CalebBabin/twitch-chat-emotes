@@ -3,11 +3,11 @@ const GIF = require('./gifLoader.js');
 
 class Chat {
 	constructor(input_configuration) {
-		const default_conrfiguration = {
+		const default_configuration = {
 			duplicateEmoteLimit: 1,
 		}
 
-		this.config = Object.assign(default_conrfiguration, input_configuration);
+		this.config = Object.assign(default_configuration, input_configuration);
 
 		if (!this.config.channels) this.config.channels = ['moonmoon'];
 
