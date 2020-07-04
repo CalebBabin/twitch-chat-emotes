@@ -5,6 +5,7 @@ class Chat {
 	constructor(input_configuration) {
 		const default_configuration = {
 			duplicateEmoteLimit: 1,
+			maximumEmoteLimit: 5,
 		}
 
 		this.config = Object.assign(default_configuration, input_configuration);
@@ -90,7 +91,7 @@ class Chat {
 				progress: 0,
 				x: Math.random(),
 				y: Math.random(),
-				emotes: output,
+				emotes: this.config.maximumEmoteLimit ? output.splice(0, this.config.maximumEmoteLimit) : output,
 			});
 		}
 	}
