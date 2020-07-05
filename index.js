@@ -15,7 +15,7 @@ class Chat {
 		this.emotes = {};
 		this.bttvEmotes = {};
 		this.emoteMaterials = {};
-		this.dispatch = ()=>{};
+		this.listeners = [];
 
 		this.client = new tmi.Client({
 			options: { debug: false },
@@ -43,6 +43,16 @@ class Chat {
 
 		this.client.addListener('message', this.handleChat.bind(this));
 		this.client.connect();
+	}
+
+	on (event, callback) {
+		this.listeners.push(callback);
+	}
+
+	dispatch (e) {
+		for (let index = 0; index < this.listeners.length; index++) {
+			this.listeners[index](e);
+		}
 	}
 
 	handleChat (channel, user, message, self) {
