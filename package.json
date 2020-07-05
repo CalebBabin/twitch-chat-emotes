@@ -1,5 +1,5 @@
 {
-  "name": "twitch-chat",
+  "name": "twitch-chat-emotes",
   "version": "0.1.6",
   "description": "A JavaScript library created to read twitch chat with BTTV integration",
   "main": "index.js",
