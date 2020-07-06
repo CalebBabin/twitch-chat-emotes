@@ -93,7 +93,8 @@ class Chat {
 						material: bttvOutput,
 						sprite: undefined,
 					});
-					emoteCache[string] = true;
+					if (!emoteCache[string]) emoteCache[string] = 0;
+					emoteCache[string]++;
 				}
 			}
 			counter += string.length + 1;
