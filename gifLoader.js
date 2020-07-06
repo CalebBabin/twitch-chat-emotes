@@ -10,7 +10,6 @@ class GIF_Instance {
 
 		this.id = id;
 		this.gifTiming = 10;
-		this.lastFrame = Date.now();
 		this.currentFrame = 0;
 		this.loadedImages = 0;
 		this.frames = [];
@@ -29,7 +28,7 @@ class GIF_Instance {
 					} else {
 						this.gifTiming = data.frames[0].delay;
 						this.frames = data.frames;
-						
+
 						for (let index = 0; index < this.frames.length; index++) {
 							const frame = this.frames[index];
 							frame.image = new Image(frame.width, frame.height);
@@ -83,11 +82,6 @@ class GIF_Instance {
 	}
 
 	dispose(frameindex) {
-
-		if (frameindex === -1) {
-			this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		}
-
 		if (this.frames[frameindex].disposal == 2) {
 			this.ctx.clearRect(
 				this.frames[frameindex].x,
@@ -97,7 +91,7 @@ class GIF_Instance {
 		}
 
 		if (this.frames[frameindex].disposal == 3) {
-			for (let index = frameindex-1; index >= 0; index--) {
+			for (let index = frameindex - 1; index >= 0; index--) {
 				const frame = this.frames[index];
 				if (frame.disposal !== 1 || index === 0) {
 					if (frame.image.complete) {
@@ -110,33 +104,31 @@ class GIF_Instance {
 	}
 
 	update() {
-		window.setTimeout(this.update.bind(this), this.frames[this.currentFrame].delay * 10);
+		this.currentFrame++;
+		const frame = this.frames[this.currentFrame];
 
-		let timeDiff = Date.now() - this.lastFrame;
-		//while (timeDiff > this.gifTiming * 10) {
-			this.currentFrame++;
-			if (this.currentFrame >= this.frames.length) this.currentFrame = 0;
-			timeDiff -= this.gifTiming;
-			this.lastFrame += timeDiff;
+		window.setTimeout(this.update.bind(this), frame.delay * 10);
 
-			if (this.frames[this.currentFrame].image.complete) {
-				this.dispose(Math.max(0, this.currentFrame-1));
+		if (this.currentFrame >= this.frames.length) this.currentFrame = 0;
 
-				this.ctx.drawImage(
-					this.frames[this.currentFrame].image,
-					0,
-					0);
-				this.needsUpdate = true;
+		if (!frame.image.complete) return;
 
-				if (!this.frames[this.currentFrame].canvas) {
-					this.frames[this.currentFrame].canvas = document.createElement('canvas');
-					this.frames[this.currentFrame].canvas.width = this.canvas.width;
-					this.frames[this.currentFrame].canvas.height = this.canvas.height;
-					this.frames[this.currentFrame].ctx = this.frames[this.currentFrame].canvas.getContext('2d');
-					this.frames[this.currentFrame].ctx.drawImage(this.canvas, 0, 0);
-				}
-			}
-		//}
+		if (this.currentFrame === 0) this.dispose(this.frames.length - 1)
+		else this.dispose(this.currentFrame - 1);
+
+		this.ctx.drawImage(
+			frame.image,
+			0,
+			0);
+		this.needsUpdate = true;
+
+		if (!frame.canvas) {
+			frame.canvas = document.createElement('canvas');
+			frame.canvas.width = this.canvas.width;
+			frame.canvas.height = this.canvas.height;
+			frame.ctx = frame.canvas.getContext('2d');
+			frame.ctx.drawImage(this.canvas, 0, 0);
+		}
 	}
 }
 
