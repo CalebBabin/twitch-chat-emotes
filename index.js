@@ -122,21 +122,4 @@ class Chat {
 	}
 }
 
-
-/*if (window.devEnvironment || false) {
-	const randomEmoteSelection = [
-		'peepoT',
-		'NOMMERS',
-		'pepeJAM',
-		'HACKERMANS',
-	];
-	setInterval(() => {
-		getEmoteArrayFromMessage(randomEmoteSelection[Math.floor(Math.random() * randomEmoteSelection.length)], []);
-	}, 100);
-
-	setInterval(() => {
-		getEmoteArrayFromMessage('moon2EE moon2LL moon2LL moon2LL moon2LL Clap', { "301948071": ["0-6"], "301948074": ["8-14", "16-22", "24-30", "32-38"] });
-	}, 1000)
-}*/
-
 export default Chat;
