@@ -1,7 +1,7 @@
 {
   "name": "twitch-chat-emotes",
   "version": "0.1.8",
-  "description": "A JavaScript library created to read twitch chat with BTTV integration",
+  "description": "Read twitch and BTTV emojis used in twitch chat",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
