@@ -26,36 +26,39 @@ class Chat {
 			channels: this.config.channels
 		});
 
-		for (let index = 0; index < this.config.channels.length; index++) {
-			const channel = this.config.channels[index].replace('#', '');
-			fetch(`https://gif-emotes.opl.io/channel/username/${channel}.js`)
-			.then(json => json.json())
-			.then(data => {
-				if (!data.error && data !== 404) {
-					for (let index = 0; index < data.length; index++) {
-						const emote = data[index];
-						this.bttvEmotes[emote.code] = emote.id;
-					}
-				}
-			})
-		}
-
+		this.fetchBTTVEmotes();
 
 		this.client.addListener('message', this.handleChat.bind(this));
 		this.client.connect();
 	}
 
-	on (event, callback) {
+	on(event, callback) {
 		this.listeners.push(callback);
 	}
 
-	dispatch (e) {
+	dispatch(e) {
 		for (let index = 0; index < this.listeners.length; index++) {
 			this.listeners[index](e);
 		}
 	}
 
-	handleChat (channel, user, message, self) {
+	fetchBTTVEmotes() {
+		for (let index = 0; index < this.config.channels.length; index++) {
+			const channel = this.config.channels[index].replace('#', '');
+			fetch(`https://gif-emotes.opl.io/channel/username/${channel}.js`)
+				.then(json => json.json())
+				.then(data => {
+					if (!data.error && data !== 404) {
+						for (let index = 0; index < data.length; index++) {
+							const emote = data[index];
+							this.bttvEmotes[emote.code] = emote.id;
+						}
+					}
+				})
+		}
+	}
+
+	handleChat(channel, user, message, self) {
 		this.getEmoteArrayFromMessage(message, user.emotes);
 	}
 
@@ -106,14 +109,14 @@ class Chat {
 		}
 	}
 
-	checkIfBTTVEmote (string) {
+	checkIfBTTVEmote(string) {
 		if (this.bttvEmotes[string] && !this.emotes[string]) {
 			return this.drawEmote(this.bttvEmotes[string]);
 		}
 		return false;
 	}
-	
-	drawEmote (url) {
+
+	drawEmote(url) {
 		if (!this.emoteMaterials[url]) {
 			const gif = new GIF(url);
 			this.emoteMaterials[url] = gif;
