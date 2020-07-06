@@ -2,10 +2,11 @@ const tmi = require('tmi.js');
 const GIF = require('./gifLoader.js');
 
 class Chat {
-	constructor(input_configuration) {
+	constructor(input_configuration = {}) {
 		const default_configuration = {
 			duplicateEmoteLimit: 1,
 			maximumEmoteLimit: 5,
+			gifAPI: "https://gif-emotes.opl.io",
 		}
 
 		this.config = Object.assign(default_configuration, input_configuration);
@@ -45,7 +46,7 @@ class Chat {
 	fetchBTTVEmotes() {
 		for (let index = 0; index < this.config.channels.length; index++) {
 			const channel = this.config.channels[index].replace('#', '');
-			fetch(`https://gif-emotes.opl.io/channel/username/${channel}.js`)
+			fetch(`${this.config.gifAPI}/channel/username/${channel}.js`)
 				.then(json => json.json())
 				.then(data => {
 					if (!data.error && data !== 404) {
@@ -119,7 +120,7 @@ class Chat {
 
 	drawEmote(url) {
 		if (!this.emoteMaterials[url]) {
-			const gif = new GIF(url);
+			const gif = new GIF(url, {gifAPI: this.config.gifAPI});
 			this.emoteMaterials[url] = gif;
 		}
 		return this.emoteMaterials[url];

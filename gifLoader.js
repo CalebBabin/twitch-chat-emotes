@@ -1,7 +1,13 @@
 const emoteBlacklist = [];
 
 class GIF_Instance {
-	constructor(id) {
+	constructor(id, config = {}) {
+		const default_configuration = {
+			gifAPI: "https://gif-emotes.opl.io",
+		}
+
+		this.config = Object.assign(default_configuration, input_configuration);
+
 		this.id = id;
 		this.gifTiming = 10;
 		this.lastFrame = Date.now();
@@ -14,11 +20,11 @@ class GIF_Instance {
 			this.url = id;
 			this.imageFallback();
 		} else {
-			fetch(`https://gif-emotes.opl.io/gif/${id}`)
+			fetch(`${this.config.gifAPI}/gif/${id}`)
 				.then(r => r.json())
 				.then(data => {
 					if (data.count === 0 || !data.count || emoteBlacklist.includes(id)) {
-						this.url = `https://gif-emotes.opl.io/gif/${id}.gif`
+						this.url = `${this.config.gifAPI}/gif/${id}.gif`
 						this.imageFallback();
 					} else {
 						this.gifTiming = data.frames[0].delay;
@@ -31,7 +37,7 @@ class GIF_Instance {
 							frame.image.addEventListener('load', () => {
 								this.loadedImages++;
 							})
-							frame.image.src = `https://gif-emotes.opl.io/static/${id}/${index}.png`;
+							frame.image.src = `${this.config.gifAPI}/static/${id}/${index}.png`;
 						}
 						this.loadListener();
 					}
