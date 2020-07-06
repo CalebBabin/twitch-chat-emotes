@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CalebBabin/twitch-chat.git"
+    "url": "git+https://github.com/CalebBabin/twitch-chat-emotes.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/CalebBabin/twitch-chat/issues"
+    "url": "https://github.com/CalebBabin/twitch-chat-emotes/issues"
   },
-  "homepage": "https://github.com/CalebBabin/twitch-chat#readme",
+  "homepage": "https://github.com/CalebBabin/twitch-chat-emotes#readme",
   "dependencies": {
     "express": "^4.17.1",
     "tmi.js": "^1.5.0"
