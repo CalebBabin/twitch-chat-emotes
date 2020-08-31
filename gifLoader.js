@@ -105,11 +105,11 @@ class GIF_Instance {
 
 	update() {
 		this.currentFrame++;
+		if (this.currentFrame >= this.frames.length) this.currentFrame = 0;
+
 		const frame = this.frames[this.currentFrame];
 
 		window.setTimeout(this.update.bind(this), frame.delay * 10);
-
-		if (this.currentFrame >= this.frames.length) this.currentFrame = 0;
 
 		if (!frame.image.complete) return;
 
