@@ -78,6 +78,7 @@ class Chat {
 							if (parseInt(arr[0]) === counter) {
 								output.push({
 									material: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'),
+									id: i,
 									sprite: undefined,
 								});
 								if (!emoteCache[string]) emoteCache[string] = 0;
@@ -92,6 +93,7 @@ class Chat {
 				if (bttvOutput !== false) {
 					output.push({
 						material: bttvOutput,
+						id: string,
 						sprite: undefined,
 					});
 					if (!emoteCache[string]) emoteCache[string] = 0;
