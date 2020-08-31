@@ -1,7 +1,7 @@
 const emoteBlacklist = [];
 
 class GIF_Instance {
-	constructor(id, config = {}) {
+	constructor(id, input_configuration = {}) {
 		const default_configuration = {
 			gifAPI: "https://gif-emotes.opl.io",
 		}
