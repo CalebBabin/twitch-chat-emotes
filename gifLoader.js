@@ -31,6 +31,9 @@ class GIF_Instance {
 
 						for (let index = 0; index < this.frames.length; index++) {
 							const frame = this.frames[index];
+
+							if (frame.delay < 1) frame.delay = 1000 / 60;
+
 							frame.image = new Image(frame.width, frame.height);
 							frame.image.crossOrigin = "";
 							frame.image.addEventListener('load', () => {
