@@ -98,7 +98,11 @@ class GIF_Instance {
 				const frame = this.frames[index];
 				if (frame.disposal !== 1 || index === 0) {
 					if (frame.image.complete) {
-						this.ctx.drawImage(frame.canvas, 0, 0);
+						try {
+							this.ctx.drawImage(frame.canvas, 0, 0);
+						} catch (e) {
+							console.error("There was an error re-rendering the previous frame.", frame, this.id);
+						}
 					}
 					break;
 				}
