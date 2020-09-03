@@ -97,7 +97,7 @@ class GIF_Instance {
 			for (let index = frameindex - 1; index >= 0; index--) {
 				const frame = this.frames[index];
 				if (frame.disposal !== 1 || index === 0) {
-					if (frame.image.complete) {
+					if (frame.image.complete && frame.canvas) {
 						try {
 							this.ctx.drawImage(frame.canvas, 0, 0);
 						} catch (e) {
