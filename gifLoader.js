@@ -181,7 +181,7 @@ class GIF_Instance {
 			frame.ctx.drawImage(this.canvas, 0, 0);
 		}
 		if (!frame.spriteSheet) {
-			this.spriteSheetContext.drawImage(frame.canvas, this.current.x, this.current.y);
+			this.spriteSheetContext.drawImage(this.canvas, this.current.x, this.current.y);
 			frame.spriteSheet = true;
 			this.needsSpriteSheetUpdate = true;
 		}
