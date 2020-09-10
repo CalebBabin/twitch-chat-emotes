@@ -169,8 +169,8 @@ class GIF_Instance {
 
 		this.ctx.drawImage(
 			frame.image,
-			frame.x,
-			frame.y);
+			0,
+			0);
 		this.needsUpdate = true;
 
 		if (!frame.canvas) {

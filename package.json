@@ -1,6 +1,6 @@
 {
   "name": "twitch-chat-emotes",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "Read twitch and BTTV emojis used in twitch chat",
   "main": "index.js",
   "scripts": {
