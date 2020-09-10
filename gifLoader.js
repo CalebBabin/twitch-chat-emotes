@@ -107,10 +107,10 @@ class GIF_Instance {
 
 		if (this.frames[frameindex].disposal == 2) {
 			this.ctx.clearRect(
-				this.frames[frameindex].x,
-				this.frames[frameindex].y,
-				this.frames[frameindex].width,
-				this.frames[frameindex].height);
+				0,
+				0,
+				this.canvas.width,
+				this.canvas.height);
 		}
 
 		if (this.frames[frameindex].disposal == 3) {
@@ -140,7 +140,7 @@ class GIF_Instance {
 
 		if (!frame.image.complete) return;
 
-		if (this.currentFrame === 0) this.dispose(this.frames.length - 1)
+		if (this.currentFrame === 0) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		else this.dispose(this.currentFrame - 1);
 
 		this.ctx.drawImage(
