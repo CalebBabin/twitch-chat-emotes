@@ -52,6 +52,11 @@ class GIF_Instance {
 							frame.image.crossOrigin = "";
 							frame.image.addEventListener('load', () => {
 								this.loadedImages++;
+								if (this.loadedImages >= this.frames.length-1) {
+									for (let index = 0; index < this.frames.length; index++) {
+										this.frames[index].spriteSheet = false;
+									}
+								}
 							})
 							frame.image.src = `${this.config.gifAPI}/static/${id}/${index}.png`;
 						}
@@ -108,13 +113,11 @@ class GIF_Instance {
 	}
 
 	getPosition(frameNumber) {
-		let row = 0;
-		while (frameNumber >= this.square) {
-			frameNumber -= this.square;
-			row++;
+		return {
+			x: frameNumber % this.square,
+			y: Math.floor(frameNumber / this.square)
+		};
 		}
-		return {x: frameNumber * this.width, y: row * this.height};
-	}
 
 	updatePosition(frameNumber) {
 		const pos = this.getPosition(frameNumber);
@@ -181,7 +184,7 @@ class GIF_Instance {
 			frame.ctx.drawImage(this.canvas, 0, 0);
 		}
 		if (!frame.spriteSheet) {
-			this.spriteSheetContext.drawImage(this.canvas, this.current.x, this.current.y);
+			this.spriteSheetContext.drawImage(this.canvas, this.current.x * this.width, this.current.y * this.height);
 			frame.spriteSheet = true;
 			this.needsSpriteSheetUpdate = true;
 		}
