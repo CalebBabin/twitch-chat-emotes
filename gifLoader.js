@@ -113,7 +113,6 @@ class GIF_Instance {
 			frameNumber -= this.square;
 			row++;
 		}
-		console.log(frameNumber, row);
 		return {x: frameNumber * this.width, y: row * this.height};
 	}
 
