@@ -14,6 +14,8 @@ class GIF_Instance {
 		this.loadedImages = 0;
 		this.frames = [];
 		this.needsUpdate = false;
+		this.spriteSheet = document.createElement('cavnas');
+		this.spriteSheetContext = this.spriteSheet.getContext('2d');
 
 		if (id.match(/http/)) {
 			this.url = id;
@@ -85,6 +87,8 @@ class GIF_Instance {
 	}
 
 	dispose(frameindex) {
+		if (frameindex < 0) frameindex += this.frames.length;
+
 		if (this.frames[frameindex].disposal == 2) {
 			this.ctx.clearRect(
 				this.frames[frameindex].x,
