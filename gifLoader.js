@@ -25,11 +25,9 @@ class GIF_Instance {
 				.then(r => r.json())
 				.then(data => {
 					if (data.count === 0 || !data.count || emoteBlacklist.includes(id)) {
-						this.url = `${this.config.gifAPI}/gif/${id}.gif`
+						this.url = `${this.config.gifAPI}/gif/${id}.gif`;
 						this.imageFallback();
 					} else {
-						this.spriteSheet.height = data.frames[0].height;
-						this.spriteSheet.width = data.frames[0].width * data.frames.length;
 						this.width = data.frames[0].width;
 						this.height = data.frames[0].height;
 						this.gifTiming = data.frames[0].delay;
@@ -37,6 +35,11 @@ class GIF_Instance {
 
 						for (let index = 0; index < this.frames.length; index++) {
 							const frame = this.frames[index];
+
+							this.width = this.height = Math.max(
+								Math.max(this.width, this.height),
+								Math.max(frame.x + frame.width, frame.y + frame.height)
+							);
 
 							if (frame.delay < 1) frame.delay = 1000 / 30 / 10;
 
@@ -47,6 +50,9 @@ class GIF_Instance {
 							})
 							frame.image.src = `${this.config.gifAPI}/static/${id}/${index}.png`;
 						}
+						this.spriteSheet.height = this.height;
+						this.spriteSheet.width = this.width * data.frames.length;
+
 						this.loadListener();
 					}
 				})
@@ -76,7 +82,13 @@ class GIF_Instance {
 		const ratio = Math.min(this.canvas.height / this.image.height, this.canvas.width / this.image.width);
 
 		this.ctx.drawImage(this.image, 0, 0, this.image.width * ratio, this.image.height * ratio);
+
+		this.spriteSheet.width = this.canvas.width;
+		this.spriteSheet.height = this.canvas.height;
+		this.spriteSheetContext.drawImage(this.canvas, 0, 0);
+
 		this.needsUpdate = true;
+		this.needsSpriteSheetUpdate = true;
 	}
 
 	loadListener() {
