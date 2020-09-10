@@ -17,6 +17,9 @@ class GIF_Instance {
 		this.spriteSheet = document.createElement('canvas');
 		this.spriteSheetContext = this.spriteSheet.getContext('2d');
 
+		this.square = 0;
+		this.current = { x: 0, y: 0 };
+
 		if (id.match(/http/)) {
 			this.url = id;
 			this.imageFallback();
@@ -32,6 +35,8 @@ class GIF_Instance {
 						this.height = data.frames[0].height;
 						this.gifTiming = data.frames[0].delay;
 						this.frames = data.frames;
+
+						this.square = Math.ceil(Math.sqrt(data.frames.length));
 
 						for (let index = 0; index < this.frames.length; index++) {
 							const frame = this.frames[index];
@@ -50,8 +55,8 @@ class GIF_Instance {
 							})
 							frame.image.src = `${this.config.gifAPI}/static/${id}/${index}.png`;
 						}
-						this.spriteSheet.height = this.height;
-						this.spriteSheet.width = this.width * data.frames.length;
+						this.spriteSheet.height = this.height * this.square;
+						this.spriteSheet.width = this.width * this.square;
 
 						this.loadListener();
 					}
@@ -102,6 +107,22 @@ class GIF_Instance {
 		this.update();
 	}
 
+	getPosition(frameNumber) {
+		let row = 0;
+		while (frameNumber >= this.square) {
+			frameNumber -= this.square;
+			row++;
+		}
+		console.log(frameNumber, row);
+		return {x: frameNumber * this.width, y: row * this.height};
+	}
+
+	updatePosition(frameNumber) {
+		const pos = this.getPosition(frameNumber);
+		this.current.x = pos.x;
+		this.current.y = pos.y;
+	}
+
 	dispose(frameindex) {
 		if (frameindex < 0) frameindex += this.frames.length;
 
@@ -133,6 +154,7 @@ class GIF_Instance {
 	update() {
 		this.currentFrame++;
 		if (this.currentFrame >= this.frames.length) this.currentFrame = 0;
+		this.updatePosition(this.currentFrame)
 
 		const frame = this.frames[this.currentFrame];
 
@@ -160,7 +182,7 @@ class GIF_Instance {
 			frame.ctx.drawImage(this.canvas, 0, 0);
 		}
 		if (!frame.spriteSheet) {
-			this.spriteSheetContext.drawImage(frame.canvas, this.width * this.currentFrame, 0);
+			this.spriteSheetContext.drawImage(frame.canvas, this.current.x, this.current.y);
 			frame.spriteSheet = true;
 			this.needsSpriteSheetUpdate = true;
 		}
