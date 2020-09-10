@@ -14,7 +14,7 @@ class GIF_Instance {
 		this.loadedImages = 0;
 		this.frames = [];
 		this.needsUpdate = false;
-		this.spriteSheet = document.createElement('cavnas');
+		this.spriteSheet = document.createElement('canvas');
 		this.spriteSheetContext = this.spriteSheet.getContext('2d');
 
 		if (id.match(/http/)) {
@@ -28,6 +28,10 @@ class GIF_Instance {
 						this.url = `${this.config.gifAPI}/gif/${id}.gif`
 						this.imageFallback();
 					} else {
+						this.spriteSheet.height = data.height;
+						this.spriteSheet.width = data.width * data.frames.length;
+						this.width = data.width;
+						this.height = data.height;
 						this.gifTiming = data.frames[0].delay;
 						this.frames = data.frames;
 
@@ -139,6 +143,11 @@ class GIF_Instance {
 			frame.canvas.height = this.canvas.height;
 			frame.ctx = frame.canvas.getContext('2d');
 			frame.ctx.drawImage(this.canvas, 0, 0);
+		}
+		if (!frame.spriteSheet) {
+			this.spriteSheetContext.drawImage(frame.canvas, this.width * this.currentFrame, 0);
+			frame.spriteSheet = true;
+			this.needsSpriteSheetUpdate = true;
 		}
 	}
 }
