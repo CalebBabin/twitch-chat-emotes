@@ -136,7 +136,10 @@ class GIF_Instance {
 
 		const frame = this.frames[this.currentFrame];
 
-		window.setTimeout(this.update.bind(this), frame.delay * 10);
+		if (frame.spriteSheet)
+			window.setTimeout(this.update.bind(this), frame.delay * 10);
+		else
+			window.setTimeout(this.update.bind(this), 0);
 
 		if (!frame.image.complete) return;
 
