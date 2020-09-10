@@ -28,10 +28,10 @@ class GIF_Instance {
 						this.url = `${this.config.gifAPI}/gif/${id}.gif`
 						this.imageFallback();
 					} else {
-						this.spriteSheet.height = data.height;
-						this.spriteSheet.width = data.width * data.frames.length;
-						this.width = data.width;
-						this.height = data.height;
+						this.spriteSheet.height = data.frames[0].height;
+						this.spriteSheet.width = data.frames[0].width * data.frames.length;
+						this.width = data.frames[0].width;
+						this.height = data.frames[0].height;
 						this.gifTiming = data.frames[0].delay;
 						this.frames = data.frames;
 
