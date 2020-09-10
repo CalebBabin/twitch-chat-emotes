@@ -4,7 +4,8 @@
   "description": "Read twitch and BTTV emojis used in twitch chat",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel examples/*.html"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "homepage": "https://github.com/CalebBabin/twitch-chat-emotes#readme",
   "dependencies": {
     "tmi.js": "^1.5.0"
+  },
+  "devDependencies": {
+    "parcel": "^1.12.4"
   }
 }
