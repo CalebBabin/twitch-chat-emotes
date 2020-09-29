@@ -65,7 +65,7 @@ class Chat {
 	}
 
 	handleChat(channel, user, message, self) {
-		this.getEmoteArrayFromMessage(message, user.emotes, !!user.badges.subscriber);
+		this.getEmoteArrayFromMessage(message, user.emotes, user.badges ? !!user.badges.subscriber : false);
 	}
 
 	getEmoteArrayFromMessage(text, emotes, subscriber) {
