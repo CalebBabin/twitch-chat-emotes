@@ -6,7 +6,7 @@ class Chat {
 		const default_configuration = {
 			duplicateEmoteLimit: 1,
 			maximumEmoteLimit: 5,
-			maximumEmoteLimit_pleb: null,
+			maximumEmoteLimit_pleb: 1,
 			gifAPI: "https://gif-emotes.opl.io",
 		}
 
