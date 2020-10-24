@@ -87,7 +87,6 @@ class Chat {
 	}
 
 	handleChat(channel, user, message, self) {
-		console.log(is_pleb(user.badges), user.badges)
 		this.getEmoteArrayFromMessage(message, user.emotes, is_pleb(user.badges));
 	}
 
