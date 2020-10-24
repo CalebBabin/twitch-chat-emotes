@@ -2,18 +2,30 @@ const tmi = require('tmi.js');
 const GIF = require('./gifLoader.js');
 
 class Chat {
-	constructor(input_configuration = {}) {
+	/**
+	 * @param {Object} config The configuration object.
+	 * @param {Number} config[].maximumEmoteLimit The maximum number of emotes permitted for a single message.
+	 * @param {Number} config[].maximumEmoteLimit_pleb The maximum number of emotes permitted for a single message from an unsubscribed user, defaults to maximumEmoteLimit.
+	 * @param {Number} config[].duplicateEmoteLimit The number of duplicate emotes permitted for a single message.
+	 * @param {Number} config[].duplicateEmoteLimit_pleb The number of duplicate emotes permitted for a single message from an unsubscribed user, defaults to duplicateEmoteLimit.
+	 * @param {Number} config[].gifAPI Define the URL of your own GIF parsing server.
+	 */
+	constructor(config = {}) {
 		const default_configuration = {
 			duplicateEmoteLimit: 1,
+			duplicateEmoteLimit_pleb: null,
 			maximumEmoteLimit: 5,
-			maximumEmoteLimit_pleb: 1,
+			maximumEmoteLimit_pleb: null,
 			gifAPI: "https://gif-emotes.opl.io",
 		}
 
-		this.config = Object.assign(default_configuration, input_configuration);
+		this.config = Object.assign(default_configuration, config);
 
 		if (this.config.maximumEmoteLimit_pleb === null) {
 			this.config.maximumEmoteLimit_pleb = this.config.maximumEmoteLimit;
+		}
+		if (this.config.duplicateEmoteLimit_pleb === null) {
+			this.config.duplicateEmoteLimit_pleb = this.config.duplicateEmoteLimit;
 		}
 
 		if (!this.config.channels) this.config.channels = ['moonmoon'];
