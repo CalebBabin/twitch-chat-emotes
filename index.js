@@ -1,6 +1,16 @@
 const tmi = require('tmi.js');
 const GIF = require('./gifLoader.js');
 
+const is_pleb = badges => {
+	return badges ? (
+		badges.subscriber !== undefined ||
+		badges['sub-gifter'] !== undefined ||
+		badges.moderator !== undefined ||
+		badges.vip !== undefined ||
+		Number(badges.bits) > 500
+	) : false;
+}
+
 class Chat {
 	/**
 	 * @param {Object} config The configuration object.
@@ -77,7 +87,8 @@ class Chat {
 	}
 
 	handleChat(channel, user, message, self) {
-		this.getEmoteArrayFromMessage(message, user.emotes, user.badges ? !!user.badges.subscriber : false);
+		console.log(is_pleb(user.badges), user.badges)
+		this.getEmoteArrayFromMessage(message, user.emotes, is_pleb(user.badges));
 	}
 
 	getEmoteArrayFromMessage(text, emotes, subscriber) {
@@ -139,7 +150,7 @@ class Chat {
 
 	drawEmote(url) {
 		if (!this.emoteMaterials[url]) {
-			const gif = new GIF(url, {gifAPI: this.config.gifAPI});
+			const gif = new GIF(url, { gifAPI: this.config.gifAPI });
 			this.emoteMaterials[url] = gif;
 		}
 		return this.emoteMaterials[url];
