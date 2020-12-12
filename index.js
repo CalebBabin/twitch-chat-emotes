@@ -23,7 +23,7 @@ class Chat {
 	constructor(config = {}) {
 		const default_configuration = {
 			duplicateEmoteLimit: 0,
-			duplicateEmoteLimit_pleb: 0,
+			duplicateEmoteLimit_pleb: null,
 			maximumEmoteLimit: 5,
 			maximumEmoteLimit_pleb: null,
 			gifAPI: "https://gif-emotes.opl.io",
@@ -32,6 +32,10 @@ class Chat {
 		this.config = Object.assign(default_configuration, config);
 
 		if (!this.config.channels) this.config.channels = ['moonmoon'];
+
+		if (this.config.duplicateEmoteLimit_pleb === null) {
+			this.config.duplicateEmoteLimit_pleb = this.config.duplicateEmoteLimit;
+		}
 
 		this.emotes = {};
 		this.bttvEmotes = {};
@@ -87,43 +91,46 @@ class Chat {
 		const output = new Array();
 		const stringArr = text.split(' ');
 		let counter = 0;
+		const maxDuplicates = subscriber ?
+			this.config.duplicateEmoteLimit :
+			this.config.duplicateEmoteLimit_pleb;
+
 		const emoteCache = {};
+		const push = (emote, array) => {
+			if (!emoteCache[emote.id]) emoteCache[emote.id] = 0;
+			if (emoteCache[emote.id] <= maxDuplicates) {
+				array.push(emote);
+				emoteCache[emote.id]++;
+			}
+		}
+
 		for (let index = 0; index < stringArr.length; index++) {
 			const string = stringArr[index];
-			if (
-				!emoteCache[string] ||
-					emoteCache[string] < subscriber ?
-					this.config.duplicateEmoteLimit :
-					this.config.duplicateEmoteLimit_pleb
-			) {
-				if (emotes !== null) {
-					for (let i in emotes) {
-						for (let index = 0; index < emotes[i].length; index++) {
-							const arr = emotes[i][index].split('-');
-							if (parseInt(arr[0]) === counter) {
-								output.push({
-									material: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'),
-									id: i,
-									sprite: undefined,
-								});
-								if (!emoteCache[string]) emoteCache[string] = 0;
-								emoteCache[string]++;
-								break;
-							}
+
+			if (emotes !== null) {
+				for (let i in emotes) {
+					for (let index = 0; index < emotes[i].length; index++) {
+						const arr = emotes[i][index].split('-');
+						if (parseInt(arr[0]) === counter) {
+							push({
+								material: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'),
+								id: i,
+								sprite: undefined,
+							}, output);
+							if (!emoteCache[string]) emoteCache[string] = 0;
+							break;
 						}
 					}
 				}
-				const bttvOutput = this.checkIfBTTVEmote(string);
+			}
+			const bttvOutput = this.checkIfBTTVEmote(string);
 
-				if (bttvOutput !== false) {
-					output.push({
-						material: bttvOutput,
-						id: string,
-						sprite: undefined,
-					});
-					if (!emoteCache[string]) emoteCache[string] = 0;
-					emoteCache[string]++;
-				}
+			if (bttvOutput !== false) {
+				push({
+					material: bttvOutput,
+					id: string,
+					sprite: undefined,
+				}, output);
 			}
 			counter += string.length + 1;
 		}
