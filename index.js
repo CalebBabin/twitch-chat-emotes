@@ -22,21 +22,14 @@ class Chat {
 	 */
 	constructor(config = {}) {
 		const default_configuration = {
-			duplicateEmoteLimit: 1,
-			duplicateEmoteLimit_pleb: null,
+			duplicateEmoteLimit: 0,
+			duplicateEmoteLimit_pleb: 0,
 			maximumEmoteLimit: 5,
 			maximumEmoteLimit_pleb: null,
 			gifAPI: "https://gif-emotes.opl.io",
 		}
 
 		this.config = Object.assign(default_configuration, config);
-
-		if (this.config.maximumEmoteLimit_pleb === null) {
-			this.config.maximumEmoteLimit_pleb = this.config.maximumEmoteLimit;
-		}
-		if (this.config.duplicateEmoteLimit_pleb === null) {
-			this.config.duplicateEmoteLimit_pleb = this.config.duplicateEmoteLimit;
-		}
 
 		if (!this.config.channels) this.config.channels = ['moonmoon'];
 
@@ -97,7 +90,12 @@ class Chat {
 		const emoteCache = {};
 		for (let index = 0; index < stringArr.length; index++) {
 			const string = stringArr[index];
-			if (!emoteCache[string] || emoteCache[string] < subscriber ? this.config.duplicateEmoteLimit : this.config.duplicateEmoteLimit_pleb) {
+			if (
+				!emoteCache[string] ||
+					emoteCache[string] < subscriber ?
+					this.config.duplicateEmoteLimit :
+					this.config.duplicateEmoteLimit_pleb
+			) {
 				if (emotes !== null) {
 					for (let i in emotes) {
 						for (let index = 0; index < emotes[i].length; index++) {
