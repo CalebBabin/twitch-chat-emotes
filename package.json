@@ -2,7 +2,6 @@
 	"name": "twitch-chat-emotes",
 	"version": "0.1.34",
 	"description": "Read twitch and BTTV emojis used in twitch chat",
-	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "parcel examples/*.html",
