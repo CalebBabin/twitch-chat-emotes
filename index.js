@@ -116,6 +116,7 @@ class Chat {
 								material: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'),
 								id: i,
 								sprite: undefined,
+								name: string,
 							}, output);
 							if (!emoteCache[string]) emoteCache[string] = 0;
 							break;
@@ -130,6 +131,7 @@ class Chat {
 					material: bttvOutput,
 					id: string,
 					sprite: undefined,
+					name: string,
 				}, output);
 			}
 			counter += string.length + 1;
