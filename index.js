@@ -27,6 +27,7 @@ class Chat {
 			maximumEmoteLimit: 5,
 			maximumEmoteLimit_pleb: null,
 			gifAPI: "https://gif-emotes.opl.io",
+			shouldTrackSubs: false
 		}
 
 		this.config = Object.assign(default_configuration, config);
@@ -54,16 +55,32 @@ class Chat {
 		this.fetchBTTVEmotes();
 
 		this.client.addListener('message', this.handleChat.bind(this));
+		
+		if(config.shouldTrackSubs)
+		{
+			this.client.addListener('anongiftpaidupgrade', this.handleAnongiftpaidupgrade.bind(this));
+			this.client.addListener('giftpaidupgrade', this.handleGiftpaidupgrade.bind(this));
+			this.client.addListener('resub', this.handleResub.bind(this));
+			this.client.addListener('subgift', this.handleSubgift.bind(this));
+			this.client.addListener('submysterygift', this.handleSubmysterygift.bind(this));
+			this.client.addListener('subscription', this.handleSub.bind(this));
+		}
+		
 		this.client.connect();
 	}
 
-	on(event, callback) {
-		this.listeners.push(callback);
+	on(eventName, callback) {
+		if(this.listeners[eventName]) {	
+			this.listeners[eventName].push(callback);
+		}
+		else {
+			this.listeners[eventName] = [callback];
+		}
 	}
 
-	dispatch(e) {
-		for (let index = 0; index < this.listeners.length; index++) {
-			this.listeners[index](e);
+	dispatch(eventName, e) {
+		for (let index = 0; index < this.listeners[eventName].length; index++) {
+			this.listeners[eventName][index](e);
 		}
 	}
 
@@ -86,6 +103,42 @@ class Chat {
 	handleChat(channel, user, message, self) {
 		this.getEmoteArrayFromMessage(message, user.emotes, is_pleb(user.badges));
 	}
+	
+	handleAnongiftpaidupgrade(channel, username, userstate, self) {		
+		let subDisplayText = username + " is continuing an anonymous giftsub!";
+		this.dispatch('subtext', subDisplayText);
+	}
+	
+	handleGiftpaidupgrade(channel, username, sender, userstate, self) {		
+		let subDisplayText = username + " is continuing a giftsub from " + sender + "!";
+		this.dispatch('subtext', subDisplayText);
+	}
+	
+	handleResub(channel, username, streakMonths, message, userstate, methods, self) {
+		let subDisplayText = username + " resubbed!";
+		if(userstate['badge-info'] && userstate['badge-info'].subscriber)
+		{
+			subDisplayText = username + " resubbed for " + userstate['badge-info'].subscriber + " months!";
+		}
+		this.dispatch('subtext', subDisplayText);
+	}
+	
+	handleSubgift(channel, username, streakMonths, recipient, methods, userstate, self) {		
+		let subDisplayText = username + " gifted a sub to " + recipient + "!";
+		this.dispatch('subtext', subDisplayText);
+	}
+	
+	handleSubmysterygift(channel, username, numberOfSubs, methods, userstate, self) {		
+		let subDisplayText = username + " gifted a sub to " + numberOfSubs + " pleb(s)!";
+		this.dispatch('subtext', subDisplayText);
+	}
+	
+	handleSub(channel, username, methods, message, userstate, self)
+	{		
+		let subDisplayText = username + " subscribed!";
+		this.dispatch('subtext', subDisplayText);
+	}
+
 
 	getEmoteArrayFromMessage(text, emotes, subscriber) {
 		const output = new Array();
@@ -138,7 +191,7 @@ class Chat {
 		}
 
 		if (output.length > 0) {
-			this.dispatch({
+			this.dispatch('emotes', {
 				progress: 0,
 				x: Math.random(),
 				y: Math.random(),
