@@ -42,6 +42,9 @@ class Chat {
 		this.bttvEmotes = {};
 		this.emoteMaterials = {};
 		this.listeners = [];
+		
+		this.multiGifter = "";
+		this.multiGifterTime = Date.now();
 
 		this.client = new tmi.Client({
 			options: { debug: false },
@@ -116,20 +119,25 @@ class Chat {
 	
 	handleResub(channel, username, streakMonths, message, userstate, methods, self) {
 		let subDisplayText = username + " resubbed!";
-		if(userstate['badge-info'] && userstate['badge-info'].subscriber)
+		if(userstate['msg-param-cumulative-months'])
 		{
-			subDisplayText = username + " resubbed for " + userstate['badge-info'].subscriber + " months!";
+			subDisplayText = username + " resubbed for " + userstate['msg-param-cumulative-months'] + " months!";
 		}
 		this.dispatch('subtext', subDisplayText);
 	}
 	
 	handleSubgift(channel, username, streakMonths, recipient, methods, userstate, self) {		
-		let subDisplayText = username + " gifted a sub to " + recipient + "!";
-		this.dispatch('subtext', subDisplayText);
+		if(username != this.multiGifter || Date.now() - this.multiGifterTime > 1000 * 20)
+		{
+			let subDisplayText = username + " gifted to " + recipient + "!";
+			this.dispatch('subtext', subDisplayText);
+		}
 	}
 	
 	handleSubmysterygift(channel, username, numberOfSubs, methods, userstate, self) {		
-		let subDisplayText = username + " gifted a sub to " + numberOfSubs + " pleb(s)!";
+		let subDisplayText = username + " gifted to " + numberOfSubs + (numberOfSubs > 1 ? " plebs!" : " pleb!");
+		this.multiGifter = username;
+		this.multiGifterTime = Date.now();
 		this.dispatch('subtext', subDisplayText);
 	}
 	
