@@ -113,7 +113,7 @@ class Chat {
 						const arr = emotes[i][index].split('-');
 						if (parseInt(arr[0]) === counter) {
 							push({
-								material: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v1/' + i + '/3.0'),
+								material: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v2/' + i + '/default/dark/3.0'),
 								id: i,
 								sprite: undefined,
 								name: string,
