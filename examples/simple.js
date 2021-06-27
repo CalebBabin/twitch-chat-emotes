@@ -24,14 +24,14 @@ const emoteIDs = {};
 // add a callback function for when a new message with emotes is sent
 ChatInstance.on("emotes", (emotes) => {
 	console.log(emotes)
-	for (let index = 0; index < emotes.emotes.length; index++) {
-		const e = emotes.emotes[index];
+	for (let index = 0; index < emotes.length; index++) {
+		const e = emotes[index];
 		if (!emoteIDs[e.id]) {
 			emoteIDs[e.id] = e;
-			document.body.appendChild(e.material.canvas)
-			e.material.canvas.setAttribute('data-id', e.id)
-			document.body.appendChild(e.material.spriteSheet)
-			e.material.spriteSheet.setAttribute('data-id', e.id)
+			document.body.appendChild(e.gif.canvas)
+			e.gif.canvas.setAttribute('data-id', e.id)
+			document.body.appendChild(e.gif.spriteSheet)
+			e.gif.spriteSheet.setAttribute('data-id', e.id)
 		}
 	}
 })

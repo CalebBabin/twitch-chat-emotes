@@ -39,7 +39,7 @@ class Chat {
 
 		this.emotes = {};
 		this.bttvEmotes = {};
-		this.emoteMaterials = {};
+		this.emoteGifs = {};
 		this.listeners = {};
 
 		this.client = new tmi.Client({
@@ -68,6 +68,7 @@ class Chat {
 	}
 
 	dispatch(event, data) {
+		if (!this.listeners[event]) return;
 		for (let index = 0; index < this.listeners[event].length; index++) {
 			this.listeners[event][index](data);
 		}
@@ -119,9 +120,8 @@ class Chat {
 						const arr = emotes[i][index].split('-');
 						if (parseInt(arr[0]) === counter) {
 							push({
-								material: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v2/' + i + '/default/dark/3.0'),
+								gif: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v2/' + i + '/default/dark/3.0'),
 								id: i,
-								sprite: undefined,
 								name: string,
 							}, output);
 							if (!emoteCache[string]) emoteCache[string] = 0;
@@ -134,9 +134,8 @@ class Chat {
 
 			if (bttvOutput !== false) {
 				push({
-					material: bttvOutput,
+					gif: bttvOutput,
 					id: string,
-					sprite: undefined,
 					name: string,
 				}, output);
 			}
@@ -144,12 +143,8 @@ class Chat {
 		}
 
 		if (output.length > 0) {
-			this.dispatch("emotes", {
-				progress: 0,
-				x: Math.random(),
-				y: Math.random(),
-				emotes: this.config.maximumEmoteLimit ? output.splice(0, this.config.maximumEmoteLimit) : output,
-			});
+			this.dispatch("emotes",
+				this.config.maximumEmoteLimit ? output.splice(0, this.config.maximumEmoteLimit) : output);
 		}
 	}
 
@@ -161,11 +156,11 @@ class Chat {
 	}
 
 	drawEmote(url) {
-		if (!this.emoteMaterials[url]) {
+		if (!this.emoteGifs[url]) {
 			const gif = new GIF(url, { gifAPI: this.config.gifAPI });
-			this.emoteMaterials[url] = gif;
+			this.emoteGifs[url] = gif;
 		}
-		return this.emoteMaterials[url];
+		return this.emoteGifs[url];
 	}
 }
 
