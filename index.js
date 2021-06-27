@@ -40,7 +40,7 @@ class Chat {
 		this.emotes = {};
 		this.bttvEmotes = {};
 		this.emoteMaterials = {};
-		this.listeners = [];
+		this.listeners = {};
 
 		this.client = new tmi.Client({
 			options: { debug: false },
@@ -57,13 +57,19 @@ class Chat {
 		this.client.connect();
 	}
 
-	on(event, callback) {
-		this.listeners.push(callback);
+
+	on(event = "emotes", callback) {
+		/**
+		 * @param {String} event The name of the event to listen for. Default = "emotes"
+		 * @param {Function} callback Callback function
+		 */
+		if (!this.listeners[event]) this.listeners[event] = [];
+		this.listeners[event].push(callback);
 	}
 
-	dispatch(e) {
-		for (let index = 0; index < this.listeners.length; index++) {
-			this.listeners[index](e);
+	dispatch(event, data) {
+		for (let index = 0; index < this.listeners[event].length; index++) {
+			this.listeners[event][index](data);
 		}
 	}
 
@@ -138,7 +144,7 @@ class Chat {
 		}
 
 		if (output.length > 0) {
-			this.dispatch({
+			this.dispatch("emotes", {
 				progress: 0,
 				x: Math.random(),
 				y: Math.random(),
