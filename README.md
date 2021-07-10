@@ -13,7 +13,7 @@ yarn add twitch-chat-emotes
 ```
 
 ```js
-import Chat from 'twitch-chat';
+import Chat from 'twitch-chat-emotes';
 
 // a default array of twitch channels to join
 let channels = ['moonmoon'];
