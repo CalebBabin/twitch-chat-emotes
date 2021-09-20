@@ -56,6 +56,7 @@ const ChatInstance = new Chat({config...})
 ```
 | Property | Description |
 | - | - |
+| `channels` | An array of twitch chat channels to connect to |
 | `maximumEmoteLimit` | The limit of emotes per message |
 | `maximumEmoteLimit_pleb` | `maximumEmoteLimit`, but for users who are not subscribed, mods, or VIPs |
 | `duplicateEmoteLimit` | The maximum amount of times the same emote can be repeated in the same message |
