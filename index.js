@@ -14,6 +14,7 @@ const is_pleb = badges => {
 class Chat {
 	/**
 	 * @param {Object} config The configuration object.
+	 * @param {Number} config[].channels An array of twitch channels to connect to, example: ["moonmoon"]
 	 * @param {Number} config[].maximumEmoteLimit The maximum number of emotes permitted for a single message.
 	 * @param {Number} config[].maximumEmoteLimit_pleb The maximum number of emotes permitted for a single message from an unsubscribed user, defaults to maximumEmoteLimit.
 	 * @param {Number} config[].duplicateEmoteLimit The number of duplicate emotes permitted for a single message.
