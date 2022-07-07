@@ -14,12 +14,12 @@ const is_pleb = badges => {
 class Chat {
 	/**
 	 * @param {Object} config The configuration object.
-	 * @param {Number} config[].channels An array of twitch channels to connect to, example: ["moonmoon"]
+	 * @param {Array} config[].channels An array of twitch channels to connect to, example: ["moonmoon"]
 	 * @param {Number} config[].maximumEmoteLimit The maximum number of emotes permitted for a single message.
 	 * @param {Number} config[].maximumEmoteLimit_pleb The maximum number of emotes permitted for a single message from an unsubscribed user, defaults to maximumEmoteLimit.
 	 * @param {Number} config[].duplicateEmoteLimit The number of duplicate emotes permitted for a single message.
 	 * @param {Number} config[].duplicateEmoteLimit_pleb The number of duplicate emotes permitted for a single message from an unsubscribed user, defaults to duplicateEmoteLimit.
-	 * @param {Number} config[].gifAPI Define the URL of your own GIF parsing server.
+	 * @param {String} config[].gifAPI Define the URL of your own GIF parsing server.
 	 */
 	constructor(config = {}) {
 		const default_configuration = {
