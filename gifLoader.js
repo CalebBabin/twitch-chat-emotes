@@ -56,11 +56,18 @@ class GIF_Instance {
 							frame.image = new Image(frame.width, frame.height);
 							frame.image.crossOrigin = "anonymous";
 							frame.image.addEventListener('load', () => {
+								frame.isBroken = false;
 								this.loadedImages++;
 								if (this.loadedImages >= this.frames.length - 1) {
 									for (let index = 0; index < this.frames.length; index++) {
 										this.frames[index].spriteSheet = false;
 									}
+								}
+							})
+							frame.image.addEventListener('error', (e) => {
+								frame.isBroken = true;
+								if (!frame.image.src.includes('?')) {
+									frame.image.src = frame.image.src + '?v=2';
 								}
 							})
 							frame.image.src = `${this.config.gifAPI}/static/${id}/${index}.png`;
@@ -165,7 +172,7 @@ class GIF_Instance {
 		else
 			window.setTimeout(this.update.bind(this), 0);
 
-		if (!frame.image.complete) return;
+		if (!frame.image.complete || frame.isBroken) return;
 
 		if (this.currentFrame === 0) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		else this.dispose(this.currentFrame - 1);
