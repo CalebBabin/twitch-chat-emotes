@@ -20,6 +20,11 @@ class GIF_Instance {
 		this.square = 0;
 		this.current = { x: 0, y: 0 };
 
+		this.canvas = document.createElement('canvas');
+		this.canvas.width = 128;
+		this.canvas.height = 128;
+		this.ctx = this.canvas.getContext('2d');
+
 		if (id.match(/http/)) {
 			this.url = id;
 			this.imageFallback();
@@ -49,7 +54,7 @@ class GIF_Instance {
 							if (frame.delay < 1) frame.delay = 1000 / 30 / 10;
 
 							frame.image = new Image(frame.width, frame.height);
-							frame.image.crossOrigin = "";
+							frame.image.crossOrigin = "anonymous";
 							frame.image.addEventListener('load', () => {
 								this.loadedImages++;
 								if (this.loadedImages >= this.frames.length - 1) {
@@ -67,11 +72,6 @@ class GIF_Instance {
 					}
 				})
 		}
-
-		this.canvas = document.createElement('canvas');
-		this.canvas.width = 128;
-		this.canvas.height = 128;
-		this.ctx = this.canvas.getContext('2d');
 	}
 
 	imageFallback() {
@@ -170,10 +170,7 @@ class GIF_Instance {
 		if (this.currentFrame === 0) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		else this.dispose(this.currentFrame - 1);
 
-		this.ctx.drawImage(
-			frame.image,
-			0,
-			0);
+		this.ctx.drawImage(frame.image, 0, 0);
 		this.needsUpdate = true;
 
 		if (!frame.canvas) {
