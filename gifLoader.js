@@ -52,7 +52,7 @@ class GIF_Instance {
 							frame.image.crossOrigin = "";
 							frame.image.addEventListener('load', () => {
 								this.loadedImages++;
-								if (this.loadedImages >= this.frames.length-1) {
+								if (this.loadedImages >= this.frames.length - 1) {
 									for (let index = 0; index < this.frames.length; index++) {
 										this.frames[index].spriteSheet = false;
 									}
@@ -117,7 +117,7 @@ class GIF_Instance {
 			x: frameNumber % this.square,
 			y: Math.floor(frameNumber / this.square)
 		};
-		}
+	}
 
 	updatePosition(frameNumber) {
 		const pos = this.getPosition(frameNumber);
