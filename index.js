@@ -37,6 +37,9 @@ class Chat {
 		if (this.config.duplicateEmoteLimit_pleb === null) {
 			this.config.duplicateEmoteLimit_pleb = this.config.duplicateEmoteLimit;
 		}
+		if (this.config.maximumEmoteLimit_pleb === null) {
+			this.config.maximumEmoteLimit_pleb = this.config.maximumEmoteLimit;
+		}
 
 		this.emotes = {};
 		this.bttvEmotes = {};
@@ -102,6 +105,9 @@ class Chat {
 		const maxDuplicates = subscriber ?
 			this.config.duplicateEmoteLimit :
 			this.config.duplicateEmoteLimit_pleb;
+		const maxEmotes = subscriber ?
+			this.config.maximumEmoteLimit :
+			this.config.maximumEmoteLimit_pleb;
 
 		const emoteCache = {};
 		const push = (emote, array) => {
@@ -145,7 +151,7 @@ class Chat {
 
 		if (output.length > 0) {
 			this.dispatch("emotes",
-				this.config.maximumEmoteLimit ? output.splice(0, this.config.maximumEmoteLimit) : output);
+				maxEmotes ? output.splice(0, maxEmotes) : output);
 		}
 	}
 
