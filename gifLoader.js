@@ -25,7 +25,7 @@ class GIF_Instance {
 		this.canvas.height = 128;
 		this.ctx = this.canvas.getContext('2d');
 
-		if (id.match(/http/)) {
+		if (id.match(/(^http|^\/)/i)) {
 			this.url = id;
 			this.imageFallback();
 		} else {

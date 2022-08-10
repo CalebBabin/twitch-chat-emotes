@@ -19,6 +19,8 @@ const ChatInstance = new Chat({
 	duplicateEmoteLimit: 5,
 })
 
+import testImageURL from './test.png';
+ChatInstance.addCustomEmote('test', testImageURL)
 
 const emoteIDs = {};
 // add a callback function for when a new message with emotes is sent

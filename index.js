@@ -42,7 +42,7 @@ class Chat {
 		}
 
 		this.emotes = {};
-		this.bttvEmotes = {};
+		this.customEmotes = {};
 		this.emoteGifs = {};
 		this.listeners = {};
 
@@ -55,12 +55,20 @@ class Chat {
 			channels: this.config.channels
 		});
 
-		this.fetchBTTVEmotes();
+		this.fetchCustomEmotes();
 
 		this.client.addListener('message', this.handleChat.bind(this));
 		this.client.connect();
 	}
 
+	
+	/**
+	 * @param {String} keyWord The word that will trigger the emote
+	 * @param {String} image The URL of the emote, must start with "/" or "http" (case insensitive)
+	 */
+	addCustomEmote(keyWord, image) {
+		this.customEmotes[keyWord] = image;
+	}
 
 	on(event = "emotes", callback) {
 		/**
@@ -78,7 +86,7 @@ class Chat {
 		}
 	}
 
-	fetchBTTVEmotes() {
+	fetchCustomEmotes() {
 		for (let index = 0; index < this.config.channels.length; index++) {
 			const channel = this.config.channels[index].replace('#', '');
 			fetch(`${this.config.gifAPI}/channel/username/${channel}.js`)
@@ -87,7 +95,7 @@ class Chat {
 					if (!data.error && data !== 404) {
 						for (let index = 0; index < data.length; index++) {
 							const emote = data[index];
-							this.bttvEmotes[emote.code] = emote.id;
+							this.customEmotes[emote.code] = emote.id;
 						}
 					}
 				})
@@ -137,11 +145,11 @@ class Chat {
 					}
 				}
 			}
-			const bttvOutput = this.checkIfBTTVEmote(string);
+			const customOutput = this.checkIfCustomEmote(string);
 
-			if (bttvOutput !== false) {
+			if (customOutput !== false) {
 				push({
-					gif: bttvOutput,
+					gif: customOutput,
 					id: string,
 					name: string,
 				}, output);
@@ -155,9 +163,9 @@ class Chat {
 		}
 	}
 
-	checkIfBTTVEmote(string) {
-		if (this.bttvEmotes[string] && !this.emotes[string]) {
-			return this.drawEmote(this.bttvEmotes[string]);
+	checkIfCustomEmote(string) {
+		if (this.customEmotes[string] && !this.emotes[string]) {
+			return this.drawEmote(this.customEmotes[string]);
 		}
 		return false;
 	}
