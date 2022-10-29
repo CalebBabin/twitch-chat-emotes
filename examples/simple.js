@@ -30,6 +30,7 @@ ChatInstance.on("emotes", (emotes) => {
 	console.log(emotes);
 	for (let index = 0; index < emotes.length; index++) {
 		const e = emotes[index];
+		console.log(e.name, e.url, e.canvas);
 		if (!emoteIDs[e.url]) {
 			emoteIDs[e.url] = e;
 			document.body.appendChild(e.canvas)

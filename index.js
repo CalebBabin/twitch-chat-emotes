@@ -145,6 +145,7 @@ class Chat {
 						if (parseInt(arr[0]) === counter) {
 							push(this.drawEmote(
 								'https://static-cdn.jtvnw.net/emoticons/v2/' + i + '/default/dark/3.0',
+								word
 							), output);
 							if (!emoteCache[word]) emoteCache[word] = 0;
 							break;
@@ -154,7 +155,7 @@ class Chat {
 			}
 
 			if (this.customEmotes.hasOwnProperty(word)) {
-				push(this.drawEmote(this.customEmotes[word]), output);
+				push(this.drawEmote(this.customEmotes[word], word), output);
 			}
 			counter += word.length + 1;
 		}
@@ -165,9 +166,9 @@ class Chat {
 		}
 	}
 
-	drawEmote(url) {
+	drawEmote(url, name) {
 		if (!this.emoteInstances[url]) {
-			this.emoteInstances[url] = new Emote(url, { gifAPI: this.config.gifAPI });
+			this.emoteInstances[url] = new Emote(url, name, { gifAPI: this.config.gifAPI });
 		}
 		return this.emoteInstances[url];
 	}
