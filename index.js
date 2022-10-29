@@ -41,9 +41,8 @@ class Chat {
 			this.config.maximumEmoteLimit_pleb = this.config.maximumEmoteLimit;
 		}
 
-		this.emotes = {};
 		this.customEmotes = {};
-		this.emoteGifs = {};
+		this.emoteInstances = {};
 		this.listeners = {};
 
 		this.client = new tmi.Client({
@@ -61,7 +60,17 @@ class Chat {
 		this.client.connect();
 	}
 
-	
+	dispose() {
+		this.client.disconnect();
+		for (const key in this.emoteInstances) {
+			if (Object.hasOwnProperty.call(this.emoteInstances, key)) {
+				const element = this.emoteInstances[key];
+				element.dispose();
+			}
+		}
+	}
+
+
 	/**
 	 * @param {String} keyWord The word that will trigger the emote
 	 * @param {String} image The URL of the emote, must start with "/" or "http" (case insensitive)
@@ -119,42 +128,35 @@ class Chat {
 
 		const emoteCache = {};
 		const push = (emote, array) => {
-			if (!emoteCache[emote.id]) emoteCache[emote.id] = 0;
-			if (emoteCache[emote.id] <= maxDuplicates) {
+			if (!emoteCache[emote.url]) emoteCache[emote.url] = 0;
+			if (emoteCache[emote.url] <= maxDuplicates) {
 				array.push(emote);
-				emoteCache[emote.id]++;
+				emoteCache[emote.url]++;
 			}
 		}
 
 		for (let index = 0; index < stringArr.length; index++) {
-			const string = stringArr[index];
+			const word = stringArr[index];
 
 			if (emotes !== null) {
 				for (let i in emotes) {
 					for (let index = 0; index < emotes[i].length; index++) {
 						const arr = emotes[i][index].split('-');
 						if (parseInt(arr[0]) === counter) {
-							push({
-								gif: this.drawEmote('https://static-cdn.jtvnw.net/emoticons/v2/' + i + '/default/dark/3.0'),
-								id: i,
-								name: string,
-							}, output);
-							if (!emoteCache[string]) emoteCache[string] = 0;
+							push(this.drawEmote(
+								'https://static-cdn.jtvnw.net/emoticons/v2/' + i + '/default/dark/3.0',
+							), output);
+							if (!emoteCache[word]) emoteCache[word] = 0;
 							break;
 						}
 					}
 				}
 			}
-			const customOutput = this.checkIfCustomEmote(string);
 
-			if (customOutput !== false) {
-				push({
-					gif: customOutput,
-					id: string,
-					name: string,
-				}, output);
+			if (this.customEmotes.hasOwnProperty(word)) {
+				push(this.drawEmote(this.customEmotes[word]), output);
 			}
-			counter += string.length + 1;
+			counter += word.length + 1;
 		}
 
 		if (output.length > 0) {
@@ -163,19 +165,11 @@ class Chat {
 		}
 	}
 
-	checkIfCustomEmote(string) {
-		if (this.customEmotes[string] && !this.emotes[string]) {
-			return this.drawEmote(this.customEmotes[string]);
-		}
-		return false;
-	}
-
 	drawEmote(url) {
-		if (!this.emoteGifs[url]) {
-			const gif = new Emote(url, { gifAPI: this.config.gifAPI });
-			this.emoteGifs[url] = gif;
+		if (!this.emoteInstances[url]) {
+			this.emoteInstances[url] = new Emote(url, { gifAPI: this.config.gifAPI });
 		}
-		return this.emoteGifs[url];
+		return this.emoteInstances[url];
 	}
 }
 

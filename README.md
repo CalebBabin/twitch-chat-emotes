@@ -1,6 +1,10 @@
 # twitch-chat-emotes
 Connects to twitch chat and emits emotes as they're typed in twitch chat.
 
+Supports all twitch emotes, animated twitch emotes are still in development.
+
+Supports Global and Channel Better Twitch TV (BTTV) emotes, static and animated.
+
 > This is a library created specifically for projects that run in the browser and require BTTV GIF emote support for Canvas and WebGL instances.
 > 
 > If you're looking for a more standard library to interact with twitch chat, you should look into [tmi.js](https://github.com/tmijs/tmi.js), which this library is based off of.
@@ -31,7 +35,10 @@ if (query_vars.channels) {
 const ChatInstance = new Chat({
 	channels,
 	duplicateEmoteLimit: 5,
-})
+});
+
+// add the word "TEST" as a custom emote
+ChatInstance.addCustomEmote("TEST", "https://example.com/image.png");
 
 // add a callback function for when a new message with emotes is sent
 ChatInstance.on("emotes", (emotes) => {
@@ -69,22 +76,23 @@ const ChatInstance = new Chat({config...})
 
 ```js
 ChatInstance.on(event, callback)
+
+...
+
+ChatInstance.on("Emotes", (array) => {
+	console.log(array);
+})
 ```
 
 | Event | Description |
 | - | - |
-| `emotes` | Returns an array of emote objects every time a message is sent in twitch chat that contains emotes |
+| `emotes` | Returns an array of emote objects every time a message is sent in twitch chat that contains matched emotes |
 
 ## Objects
 
 **Emote**
 | Property | Description |
 | - | - |
-| `gif` | A `GIF` instance of the emote |
+| `url` | The "unique ID" of the emote, either it's name or a URL |
 | `name` | The name of the emote (Example: `Kappa`, `FeelsGoodMan`, `KomodoHype`) |
-| `id` | The unique identifier of the emote |
-
-**GIF**
-| Property | Description |
-| - | - |
-| `canvas` | A `canvas` instance that always contains the current frame |
+| `canvas` | The emotes canvas, there is only one unique canvas element for each emote *(adding it multiple times in the DOM will just move it between elements)* |

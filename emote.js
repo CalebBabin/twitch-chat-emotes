@@ -1,14 +1,14 @@
 const emoteBlacklist = [];
-const default_configuration = {
-	gifAPI: "https://gif-emotes.opl.io",
-}
 
 export default class Emote {
-	constructor(id, input_configuration = {}) {
-
+	constructor(url, name, input_configuration = {}) {
+		const default_configuration = {
+			gifAPI: "https://gif-emotes.opl.io",
+		}
 		this.config = Object.assign(default_configuration, input_configuration);
 
-		this.id = id;
+		this.name = name;
+		this.url = url;
 		this.gifTiming = 10;
 		this.currentFrame = 0;
 		this.loadedImages = 0;
@@ -25,16 +25,16 @@ export default class Emote {
 		this.canvas.height = 128;
 		this.ctx = this.canvas.getContext('2d');
 
-		if (id.match(/(^http|^\/)/i)) {
-			this.url = id;
+		if (url.match(/(^http|^\/)/i)) {
+			this.url = url;
 			this.imageFallback();
 		} else {
-			fetch(`${this.config.gifAPI}/gif/${id}`)
+			fetch(`${this.config.gifAPI}/gif/${url}`)
 				.then(r => r.json())
 				.then(data => {
 					if (this.disposing === true) return;
-					if (data.count === 0 || !data.count || emoteBlacklist.includes(id)) {
-						this.url = `${this.config.gifAPI}/gif/${id}.gif`;
+					if (data.count === 0 || !data.count || emoteBlacklist.includes(url)) {
+						this.url = `${this.config.gifAPI}/gif/${url}.gif`;
 						this.imageFallback();
 					} else {
 						this.width = data.frames[0].width;
@@ -73,7 +73,7 @@ export default class Emote {
 									frame.image.src = frame.image.src + '?v=2';
 								}
 							})
-							frame.image.src = `${this.config.gifAPI}/static/${id}/${index}.png`;
+							frame.image.src = `${this.config.gifAPI}/static/${url}/${index}.png`;
 						}
 						this.spriteSheet.height = this.height * this.square;
 						this.spriteSheet.width = this.width * this.square;
@@ -201,7 +201,7 @@ export default class Emote {
 	/**
 	 * Cleans up ongoing emote updates
 	 */
-	dispose () {
+	dispose() {
 		this.disposing = true;
 		if (this.hasOwnProperty('timeout')) window.clearTimeout(this.timeout);
 		delete this.ctx;
