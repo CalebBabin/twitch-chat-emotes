@@ -132,7 +132,7 @@ class GIF_Instance {
 		this.current.y = pos.y;
 	}
 
-	dispose(frameindex) {
+	disposeFrame(frameindex) {
 		if (frameindex < 0) frameindex += this.frames.length;
 
 		if (this.frames[frameindex].disposal == 2) {
@@ -175,7 +175,7 @@ class GIF_Instance {
 		if (!frame.image.complete || frame.isBroken) return;
 
 		if (this.currentFrame === 0) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-		else this.dispose(this.currentFrame - 1);
+		else this.disposeFrame(this.currentFrame - 1);
 
 		this.ctx.drawImage(frame.image, 0, 0);
 		this.needsUpdate = true;
