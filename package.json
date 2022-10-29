@@ -7,6 +7,13 @@
 		"start": "parcel examples/*.html",
 		"build": "parcel build examples/*.html"
 	},
+	"keywords": [
+		"twitch",
+		"bttv",
+		"better twitch tv",
+		"emotes",
+		"canvas"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/CalebBabin/twitch-chat-emotes.git"
