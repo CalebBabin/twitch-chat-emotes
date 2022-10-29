@@ -1,10 +1,10 @@
 const emoteBlacklist = [];
+const default_configuration = {
+	gifAPI: "https://gif-emotes.opl.io",
+}
 
 class GIF_Instance {
 	constructor(id, input_configuration = {}) {
-		const default_configuration = {
-			gifAPI: "https://gif-emotes.opl.io",
-		}
 
 		this.config = Object.assign(default_configuration, input_configuration);
 
@@ -32,6 +32,7 @@ class GIF_Instance {
 			fetch(`${this.config.gifAPI}/gif/${id}`)
 				.then(r => r.json())
 				.then(data => {
+					if (this.disposing === true) return;
 					if (data.count === 0 || !data.count || emoteBlacklist.includes(id)) {
 						this.url = `${this.config.gifAPI}/gif/${id}.gif`;
 						this.imageFallback();
@@ -56,6 +57,7 @@ class GIF_Instance {
 							frame.image = new Image(frame.width, frame.height);
 							frame.image.crossOrigin = "anonymous";
 							frame.image.addEventListener('load', () => {
+								if (this.disposing === true) return;
 								frame.isBroken = false;
 								this.loadedImages++;
 								if (this.loadedImages >= this.frames.length - 1) {
@@ -65,6 +67,7 @@ class GIF_Instance {
 								}
 							})
 							frame.image.addEventListener('error', (e) => {
+								if (this.disposing === true) return;
 								frame.isBroken = true;
 								if (!frame.image.src.includes('?')) {
 									frame.image.src = frame.image.src + '?v=2';
@@ -168,9 +171,9 @@ class GIF_Instance {
 		const frame = this.frames[this.currentFrame];
 
 		if (frame.spriteSheet)
-			window.setTimeout(this.update.bind(this), frame.delay * 10);
+			this.timeout = window.setTimeout(this.update.bind(this), frame.delay * 10);
 		else
-			window.setTimeout(this.update.bind(this), 0);
+			this.timeout = window.setTimeout(this.update.bind(this), 0);
 
 		if (!frame.image.complete || frame.isBroken) return;
 
@@ -192,6 +195,20 @@ class GIF_Instance {
 			frame.spriteSheet = true;
 			this.needsSpriteSheetUpdate = true;
 		}
+	}
+
+
+	/**
+	 * Cleans up ongoing emote updates
+	 */
+	dispose () {
+		this.disposing = true;
+		if (this.hasOwnProperty('timeout')) window.clearTimeout(this.timeout);
+		delete this.ctx;
+		delete this.canvas;
+		delete this.spriteSheetContext;
+		delete this.spriteSheet;
+		delete this.frames;
 	}
 }
 
