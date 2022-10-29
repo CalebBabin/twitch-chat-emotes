@@ -3,7 +3,7 @@ const default_configuration = {
 	gifAPI: "https://gif-emotes.opl.io",
 }
 
-class GIF_Instance {
+export default class Emote {
 	constructor(id, input_configuration = {}) {
 
 		this.config = Object.assign(default_configuration, input_configuration);
@@ -211,5 +211,3 @@ class GIF_Instance {
 		delete this.frames;
 	}
 }
-
-module.exports = GIF_Instance;
