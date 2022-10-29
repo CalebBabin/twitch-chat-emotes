@@ -1,5 +1,5 @@
-const tmi = require('tmi.js');
-const GIF = require('./gifLoader.js');
+import tmi from 'tmi.js';
+import Emote from './emote.js';
 
 const is_pleb = badges => {
 	return badges ? (
@@ -172,7 +172,7 @@ class Chat {
 
 	drawEmote(url) {
 		if (!this.emoteGifs[url]) {
-			const gif = new GIF(url, { gifAPI: this.config.gifAPI });
+			const gif = new Emote(url, { gifAPI: this.config.gifAPI });
 			this.emoteGifs[url] = gif;
 		}
 		return this.emoteGifs[url];
