@@ -2,11 +2,11 @@
 import Chat from '../index.js';
 
 // a default array of twitch channels to join
-let channels = ['moonmoon'];
+let channels = ['moonmoon', 'antimattertape'];
 
 // the following few lines of code will allow you to add ?channels=channel1,channel2,channel3 to the URL in order to override the default array of channels
 const query_vars = {};
-const query_parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
 	query_vars[key] = value;
 });
 if (query_vars.channels) {
@@ -16,21 +16,22 @@ if (query_vars.channels) {
 // create our chat instance
 const ChatInstance = new Chat({
 	channels,
-	duplicateEmoteLimit: 5,
+	duplicateEmoteLimit: 0,
+	maximumEmoteLimit: 10,
 });
 
 window.ChatInstance = ChatInstance;
 
 import testImageURL from './test.png';
 ChatInstance.addCustomEmote('test', testImageURL)
+ChatInstance.drawEmote(testImageURL, 'test');
 
 const emoteIDs = {};
 // add a callback function for when a new message with emotes is sent
 ChatInstance.on("emotes", (emotes) => {
-	console.log(emotes);
 	for (let index = 0; index < emotes.length; index++) {
 		const e = emotes[index];
-		console.log(e.name, e.url, e.canvas);
+		console.log(e.name, e.url, e.service);
 		if (!emoteIDs[e.url]) {
 			emoteIDs[e.url] = e;
 			document.body.appendChild(e.canvas)

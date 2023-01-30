@@ -27,7 +27,7 @@ class Chat {
 			duplicateEmoteLimit_pleb: null,
 			maximumEmoteLimit: 5,
 			maximumEmoteLimit_pleb: null,
-			gifAPI: "https://gif-emotes.opl.io",
+			gifAPI: "https://gif-emotes.opl.io/v2",
 		}
 
 		this.config = Object.assign(default_configuration, config);
@@ -41,7 +41,7 @@ class Chat {
 			this.config.maximumEmoteLimit_pleb = this.config.maximumEmoteLimit;
 		}
 
-		this.customEmotes = {};
+		this.customEmotes = { custom: {} };
 		this.emoteInstances = {};
 		this.listeners = {};
 
@@ -76,7 +76,7 @@ class Chat {
 	 * @param {String} image The URL of the emote, must start with "/" or "http" (case insensitive)
 	 */
 	addCustomEmote(keyWord, image) {
-		this.customEmotes[keyWord] = image;
+		this.customEmotes.custom[keyWord] = image;
 	}
 
 	on(event = "emotes", callback) {
@@ -102,10 +102,13 @@ class Chat {
 				.then(json => json.json())
 				.then(data => {
 					if (!data.error && data !== 404) {
-						for (let index = 0; index < data.length; index++) {
-							const emote = data[index];
-							this.customEmotes[emote.code] = emote.id;
+						for (let index = 0; index < data.emotes.length; index++) {
+							const emote = data.emotes[index];
+							if (!this.customEmotes[emote.service]) this.customEmotes[emote.service] = {};
+							this.customEmotes[emote.service][emote.code] = emote.id;
 						}
+						console.log(`Loaded ${data.emotes.length} emotes from ${channel}`);
+						console.log(this.customEmotes);
 					}
 				})
 		}
@@ -144,8 +147,9 @@ class Chat {
 						const arr = emotes[i][index].split('-');
 						if (parseInt(arr[0]) === counter) {
 							push(this.drawEmote(
-								'https://static-cdn.jtvnw.net/emoticons/v2/' + i + '/default/dark/3.0',
-								word
+								i,
+								word,
+								"twitch"
 							), output);
 							if (!emoteCache[word]) emoteCache[word] = 0;
 							break;
@@ -154,8 +158,12 @@ class Chat {
 				}
 			}
 
-			if (this.customEmotes.hasOwnProperty(word)) {
-				push(this.drawEmote(this.customEmotes[word], word), output);
+			for (const service in this.customEmotes) {
+				if (Object.hasOwnProperty.call(this.customEmotes, service)) {
+					if (this.customEmotes[service].hasOwnProperty(word)) {
+						push(this.drawEmote(this.customEmotes[service][word], word, service), output);
+					}
+				}
 			}
 			counter += word.length + 1;
 		}
@@ -166,9 +174,9 @@ class Chat {
 		}
 	}
 
-	drawEmote(url, name) {
+	drawEmote(url, name, service = "custom") {
 		if (!this.emoteInstances[url]) {
-			this.emoteInstances[url] = new Emote(url, name, { gifAPI: this.config.gifAPI });
+			this.emoteInstances[url] = new Emote(url, name, { service, gifAPI: this.config.gifAPI });
 		}
 		return this.emoteInstances[url];
 	}
