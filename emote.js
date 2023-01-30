@@ -33,7 +33,7 @@ export default class Emote {
 		this.canvas.height = 128;
 		this.ctx = this.canvas.getContext('2d');
 
-		if (url.match(/(^http|^\/)/i)) {
+		if (String(url).match(/(^http|^\/)/i)) {
 			this.url = url;
 			this.imageFallback();
 		} else {
