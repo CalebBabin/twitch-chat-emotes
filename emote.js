@@ -1,12 +1,20 @@
 const emoteBlacklist = [];
 
 export default class Emote {
+	/**
+	 * 
+	 * @param {*} url ID or URL of the emote 
+	 * @param {*} name 
+	 * @param {*} service 
+	 * @param {*} input_configuration 
+	 */
 	constructor(url, name, input_configuration = {}) {
 		const default_configuration = {
-			gifAPI: "https://gif-emotes.opl.io",
+			gifAPI: "https://gif-emotes.opl.io/v2",
 		}
 		this.config = Object.assign(default_configuration, input_configuration);
 
+		this.service = this.config.service;
 		this.name = name;
 		this.url = url;
 		this.gifTiming = 10;
@@ -29,12 +37,12 @@ export default class Emote {
 			this.url = url;
 			this.imageFallback();
 		} else {
-			fetch(`${this.config.gifAPI}/gif/${url}`)
+			fetch(`${this.config.gifAPI}/gif/${this.service}/${url}`)
 				.then(r => r.json())
 				.then(data => {
 					if (this.disposing === true) return;
 					if (data.count === 0 || !data.count || emoteBlacklist.includes(url)) {
-						this.url = `${this.config.gifAPI}/gif/${url}.gif`;
+						this.url = `${this.config.gifAPI}/gif/${this.service}/${url}.gif`;
 						this.imageFallback();
 					} else {
 						this.width = data.frames[0].width;
@@ -73,7 +81,7 @@ export default class Emote {
 									frame.image.src = frame.image.src + '?v=2';
 								}
 							})
-							frame.image.src = `${this.config.gifAPI}/static/${url}/${index}.png`;
+							frame.image.src = `${this.config.gifAPI}/static/${this.service}/${url}/${index}.png`;
 						}
 						this.spriteSheet.height = this.height * this.square;
 						this.spriteSheet.width = this.width * this.square;
