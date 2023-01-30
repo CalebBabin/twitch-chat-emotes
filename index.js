@@ -41,8 +41,8 @@ class Chat {
 			this.config.maximumEmoteLimit_pleb = this.config.maximumEmoteLimit;
 		}
 
-		this.customEmotes = { custom: {} };
-		this.emoteInstances = {};
+		this.customEmotes = { custom: {} }; // map out ID's to emotes names and services
+		this.emoteInstances = { custom: {} };	// map out emote instances to emote names
 		this.listeners = {};
 
 		this.client = new tmi.Client({
@@ -62,10 +62,13 @@ class Chat {
 
 	dispose() {
 		this.client.disconnect();
-		for (const key in this.emoteInstances) {
-			if (Object.hasOwnProperty.call(this.emoteInstances, key)) {
-				const element = this.emoteInstances[key];
-				element.dispose();
+		for (const service in this.emoteInstances) {
+			const emotes = this.emoteInstances[service];
+			for (const key in emotes) {
+				if (Object.hasOwnProperty.call(emotes, key)) {
+					const element = emotes[key];
+					element.dispose();
+				}
 			}
 		}
 	}
@@ -175,10 +178,13 @@ class Chat {
 	}
 
 	drawEmote(url, name, service = "custom") {
-		if (!this.emoteInstances[url]) {
-			this.emoteInstances[url] = new Emote(url, name, { service, gifAPI: this.config.gifAPI });
+		if (!this.emoteInstances[service]) this.emoteInstances[service] = {};
+
+		if (!this.emoteInstances[service][name]) {
+			this.emoteInstances[service][name] = new Emote(url, name, { service, gifAPI: this.config.gifAPI });
 		}
-		return this.emoteInstances[url];
+
+		return this.emoteInstances[service][name];
 	}
 }
 

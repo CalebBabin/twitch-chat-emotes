@@ -31,9 +31,13 @@ const emoteIDs = {};
 ChatInstance.on("emotes", (emotes) => {
 	for (let index = 0; index < emotes.length; index++) {
 		const e = emotes[index];
-		console.log(e.name, e.url, e.service);
-		if (!emoteIDs[e.url]) {
-			emoteIDs[e.url] = e;
+
+		if (!emoteIDs[e.service]) emoteIDs[e.service] = {};
+
+		if (!emoteIDs[e.service][e.name]) {
+			console.log(e.name, e.url, e.service);
+			emoteIDs[e.service][e.name] = e;
+
 			document.body.appendChild(e.canvas)
 			e.canvas.setAttribute('data-id', e.url)
 			document.body.appendChild(e.spriteSheet)
