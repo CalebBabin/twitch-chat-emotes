@@ -4,8 +4,8 @@
 	"description": "Read twitch and BTTV emojis used in twitch chat",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "parcel examples/*.html",
-		"build": "parcel build examples/*.html"
+		"start": "vite examples/ --open",
+		"build": "vite build examples/ --outDir ../dist/"
 	},
 	"keywords": [
 		"twitch",
@@ -27,9 +27,8 @@
 	"dependencies": {
 		"tmi.js": "^1.8.5"
 	},
+	"type": "module",
 	"devDependencies": {
-		"parcel": "^2.7.0",
-		"process": "^0.11.10"
-	},
-	"type": "module"
+		"vite": "^5.0.5"
+	}
 }
