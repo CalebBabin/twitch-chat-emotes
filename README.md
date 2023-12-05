@@ -86,14 +86,14 @@ ChatInstance.on(event, callback)
 
 ...
 
-ChatInstance.on("Emotes", (array) => {
-	console.log(array);
+ChatInstance.on("Emotes", (emotes, data) => {
+	console.log(data.user.username + ': ' + data.message, emotes);
 })
 ```
 
-| Event    | Description                                                                                                |
-| -------- | ---------------------------------------------------------------------------------------------------------- |
-| `emotes` | Returns an array of emote objects every time a message is sent in twitch chat that contains matched emotes |
+| Event | Description |
+| - | - |
+| `emotes` | Returns an array of emote objects every time a message is sent in twitch chat that contains matched emotes, an optional second argument contains message and user data |
 
 ## Objects
 

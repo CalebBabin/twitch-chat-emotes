@@ -28,11 +28,12 @@ ChatInstance.drawEmote(testImageURL, 'test');
 
 const emoteIDs = {};
 // add a callback function for when a new message with emotes is sent
-ChatInstance.on("emotes", (emotes) => {
+ChatInstance.on("emotes", (emotes, data) => {
+	console.log(data.user.username + ': ' + data.message, emotes);
 	for (let index = 0; index < emotes.length; index++) {
 		const e = emotes[index];
-		console.log(e.name, e.url, e.service);
 		if (!emoteIDs[e.url]) {
+			console.log('new emote', e.name, e.url, e.canvas);
 			emoteIDs[e.url] = e;
 			document.body.appendChild(e.canvas)
 			e.canvas.setAttribute('data-id', e.url)

@@ -88,10 +88,11 @@ class Chat {
 		this.listeners[event].push(callback);
 	}
 
-	dispatch(event, data) {
+	dispatch(event, data, extra_data) {
 		if (!this.listeners[event]) return;
 		for (let index = 0; index < this.listeners[event].length; index++) {
-			this.listeners[event][index](data);
+			if (extra_data) this.listeners[event][index](data, extra_data);
+			else this.listeners[event][index](data);
 		}
 	}
 
@@ -115,17 +116,19 @@ class Chat {
 	}
 
 	handleChat(channel, user, message, self) {
-		this.getEmoteArrayFromMessage(message, user.emotes, is_pleb(user.badges));
+		this.getEmoteArrayFromMessage(message, user.emotes, user, channel);
 	}
 
-	getEmoteArrayFromMessage(text, emotes, subscriber) {
+	getEmoteArrayFromMessage(text, emotes, user, channel) {
+		const isSubscriber = is_pleb(user.badges);
+
 		const output = new Array();
 		const stringArr = text.split(' ');
 		let counter = 0;
-		const maxDuplicates = subscriber ?
+		const maxDuplicates = isSubscriber ?
 			this.config.duplicateEmoteLimit :
 			this.config.duplicateEmoteLimit_pleb;
-		const maxEmotes = subscriber ?
+		const maxEmotes = isSubscriber ?
 			this.config.maximumEmoteLimit :
 			this.config.maximumEmoteLimit_pleb;
 
@@ -169,8 +172,11 @@ class Chat {
 		}
 
 		if (output.length > 0) {
-			this.dispatch("emotes",
-				maxEmotes ? output.splice(0, maxEmotes) : output);
+			this.dispatch(
+				"emotes",
+				maxEmotes ? output.splice(0, maxEmotes) : output,
+				{ user, message: text, channel }
+			);
 		}
 	}
 
